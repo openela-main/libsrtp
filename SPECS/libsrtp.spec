@@ -2,7 +2,7 @@
 
 Name:		libsrtp
 Version:	2.3.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	An implementation of the Secure Real-time Transport Protocol (SRTP)
 License:	BSD
 URL:		https://github.com/cisco/libsrtp
@@ -15,6 +15,9 @@ Patch0:		libsrtp-2.3.0-shared-fix.patch
 Patch1:		libsrtp-2.3.0-test-util.patch
 # Link test binaries against shared lib
 Patch2:		libsrtp-2.3.0-shared-test-fix.patch
+# Fix issue with NSS 3.63 incompatibility
+# credit to George Joseph
+Patch3:         libsrtp-2.3.0-nss-3.63-fix.patch
 
 %description
 This package provides an implementation of the Secure Real-time
@@ -42,6 +45,7 @@ Tools for testing and decoding SRTP
 %patch0 -p1 -b .sharedfix
 %patch1 -p1 -b .utilfix
 %patch2 -p1 -b .test-shared-fix
+%patch3 -p1 -b .nssfix
 
 %if 0%{?rhel} > 0
 %ifarch ppc64
@@ -84,6 +88,10 @@ install -D -p -m 0755 test/test_srtp %{buildroot}%{_bindir}/test_srtp
 %{_bindir}/*
 
 %changelog
+* Thu Jul 06 2023 Wim Taymans <wtaymans@redhat.com> - 2.3.0-8
+- fix NSS incompatibility, thanks to George Joseph
+  Resolves: rhbz#2211526
+
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 2.3.0-7
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688
